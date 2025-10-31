@@ -12,7 +12,8 @@ export class AdminService {
   async checkAdminRole(userId: string): Promise<UserRole | null> {
     try {
       const { data } = await apiClient.models.User.get({ id: userId });
-      return data?.role || null;
+      // role이 없으면 기본값 'USER'로 간주
+      return (data?.role as UserRole) || 'USER';
     } catch (error) {
       console.error('[AdminService] Error checking admin role:', error);
       return null;
@@ -24,6 +25,7 @@ export class AdminService {
    */
   async isAdmin(userId: string): Promise<boolean> {
     const role = await this.checkAdminRole(userId);
+    // null이거나 'USER'면 false
     return role === 'ADMIN' || role === 'SUPER_ADMIN';
   }
 

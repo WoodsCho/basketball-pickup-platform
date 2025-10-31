@@ -25,9 +25,9 @@ export class AuthService {
   async createUserProfile(userData: Omit<User, 'createdAt' | 'updatedAt'>): Promise<User | null> {
     try {
       // role이 없으면 기본값 'USER' 설정
-      const dataWithRole = {
+      const dataWithRole: any = {
         ...userData,
-        role: userData.role || 'USER',
+        role: (userData as any).role || 'USER',
       };
       const { data } = await apiClient.models.User.create(dataWithRole);
       return data as User | null;

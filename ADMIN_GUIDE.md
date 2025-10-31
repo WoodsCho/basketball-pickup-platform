@@ -27,6 +27,48 @@
 
 ---
 
+## ⚠️ 중요: 기존 사용자 마이그레이션
+
+스키마에 `role` 필드를 추가했지만, **기존 사용자 데이터는 자동으로 업데이트되지 않습니다.**
+
+### 빠른 해결 (개발자 도구 사용)
+
+앱에 로그인한 상태에서 개발자 도구 콘솔에서 실행:
+
+```javascript
+// Amplify 클라이언트 가져오기
+const { generateClient } = await import('aws-amplify/data');
+const client = generateClient();
+
+// 현재 사용자 ID (콘솔에서 확인 또는 앱 우측 하단 디버그 정보 참고)
+const userId = 'YOUR_USER_ID_HERE';
+
+// role 추가
+await client.models.User.update({
+  id: userId,
+  role: 'SUPER_ADMIN'  // 'ADMIN', 'USER' 중 선택
+});
+
+console.log('✅ 완료! 로그아웃 후 재로그인하세요.');
+```
+
+### 마이그레이션 스크립트 사용
+
+모든 사용자에게 기본 role을 추가하려면:
+
+```typescript
+// src/shared/utils/migrateUserRoles.ts 파일 참고
+import { migrateUserRoles, setUserAsAdmin } from '@/shared/utils/migrateUserRoles';
+
+// 모든 사용자에게 role='USER' 추가
+await migrateUserRoles();
+
+// 특정 사용자를 관리자로 설정
+await setUserAsAdmin('USER_ID', 'SUPER_ADMIN');
+```
+
+---
+
 ## 관리자 계정 생성 방법
 
 ### 방법 1: 회원가입 후 수동 설정 (권장)
@@ -35,7 +77,7 @@
 1. 앱에 접속하여 일반 회원가입 진행
 2. 온보딩 프로세스 완료 (이름, 전화번호, 포지션, 레벨 설정)
 
-#### 2단계: DynamoDB에서 role 필드 수정
+#### 2단계: DynamoDB에서 role 필드 추가/수정
 
 **AWS Console 사용:**
 1. AWS Console → DynamoDB 접속
