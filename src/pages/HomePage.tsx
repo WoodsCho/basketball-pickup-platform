@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Filter, MapPin, Plus } from 'lucide-react';
+import { Filter, MapPin, Plus } from 'lucide-react';
 import MatchCard from '../components/match/MatchCard';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
