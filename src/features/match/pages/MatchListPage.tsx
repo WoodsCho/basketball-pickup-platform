@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Filter, MapPin, Plus } from 'lucide-react';
+import { Filter, MapPin, Plus, User } from 'lucide-react';
 import { Button, Input } from '@/shared/components';
 import type { Court } from '@/shared/types';
 import { useMatches } from '../hooks/useMatches';
@@ -40,10 +40,19 @@ export default function MatchListPage() {
               <span className="text-2xl">🏀</span>
               <h1 className="text-xl font-bold text-gray-900">농구 픽업 매칭</h1>
             </div>
-            <Button onClick={() => navigate('/match/create')}>
-              <Plus className="w-4 h-4 mr-1" />
-              매치 만들기
-            </Button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => navigate('/profile')}
+                className="p-2 hover:bg-gray-100 rounded-lg transition"
+                title="프로필"
+              >
+                <User className="w-5 h-5 text-gray-700" />
+              </button>
+              <Button onClick={() => navigate('/match/create')}>
+                <Plus className="w-4 h-4 mr-1" />
+                매치 만들기
+              </Button>
+            </div>
           </div>
         </div>
       </header>

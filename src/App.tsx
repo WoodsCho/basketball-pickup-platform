@@ -4,6 +4,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { useAuth, OnboardingPage } from '@/features/auth';
 import { MatchListPage, MatchDetailPage, CreateMatchPage } from '@/features/match';
 import { AdminDashboardPage, CourtManagementPage, useAdminCheck } from '@/features/admin';
+import { ProfilePage } from '@/features/user';
 import { useEffect, useState } from 'react';
 
 function App() {
@@ -43,6 +44,10 @@ function AppContent({ user, signOut }: { user: any; signOut?: any }) {
         {
           path: '/match/:matchId',
           element: <MatchDetailPage />,
+        },
+        {
+          path: '/profile',
+          element: <ProfilePage />,
         },
         {
           path: '/admin',

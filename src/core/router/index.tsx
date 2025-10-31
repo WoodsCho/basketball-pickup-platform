@@ -5,6 +5,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { MatchListPage, MatchDetailPage, CreateMatchPage } from '@/features/match';
 import { AdminDashboardPage, CourtManagementPage } from '@/features/admin';
+import { ProfilePage } from '@/features/user';
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ export const router = createBrowserRouter([
   {
     path: '/match/:matchId',
     element: <MatchDetailPage />,
+  },
+  {
+    path: '/profile',
+    element: <ProfilePage />,
   },
   {
     path: '/admin',
