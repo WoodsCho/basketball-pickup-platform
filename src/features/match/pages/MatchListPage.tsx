@@ -40,7 +40,7 @@ export default function MatchListPage() {
               <span className="text-2xl">🏀</span>
               <h1 className="text-xl font-bold text-gray-900">농구 픽업 매칭</h1>
             </div>
-            <Button onClick={() => window.location.href = '/create'}>
+            <Button onClick={() => navigate('/match/create')}>
               <Plus className="w-4 h-4 mr-1" />
               매치 만들기
             </Button>

@@ -2,7 +2,7 @@ import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { useAuth, OnboardingPage } from '@/features/auth';
-import { MatchListPage, MatchDetailPage } from '@/features/match';
+import { MatchListPage, MatchDetailPage, CreateMatchPage } from '@/features/match';
 import { AdminDashboardPage, useAdminCheck } from '@/features/admin';
 import { useEffect, useState } from 'react';
 
@@ -35,6 +35,10 @@ function AppContent({ user, signOut }: { user: any; signOut?: any }) {
         {
           path: '/',
           element: isAdmin ? <AdminDashboardPage /> : <MatchListPage />,
+        },
+        {
+          path: '/match/create',
+          element: <CreateMatchPage />,
         },
         {
           path: '/match/:matchId',

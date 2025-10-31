@@ -25,3 +25,4 @@ export { default as MatchCard } from './components/MatchCard';
 // Pages
 export { default as MatchListPage } from './pages/MatchListPage';
 export { default as MatchDetailPage } from './pages/MatchDetailPage';
+export { default as CreateMatchPage } from './pages/CreateMatchPage';
