@@ -107,7 +107,7 @@ export default function MatchListPage() {
           ) : filteredMatches.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-xl">
               <p className="text-gray-600">현재 모집 중인 매치가 없습니다.</p>
-              <Button className="mt-4" onClick={() => window.location.href = '/create'}>
+              <Button className="mt-4" onClick={() => navigate('/match/create')}>
                 첫 매치 만들기
               </Button>
             </div>
@@ -134,7 +134,7 @@ export default function MatchListPage() {
           <p className="text-primary-100 mb-6">
             시간과 장소를 정하고, 같은 레벨의 플레이어들과 게임하세요
           </p>
-          <Button variant="secondary" size="lg">
+          <Button variant="secondary" size="lg" onClick={() => navigate('/match/create')}>
             <Plus className="w-5 h-5 mr-2" />
             매치 만들기
           </Button>
@@ -144,19 +144,31 @@ export default function MatchListPage() {
       {/* Bottom Navigation (Mobile) */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t md:hidden">
         <div className="flex justify-around py-2">
-          <button className="flex flex-col items-center p-2 text-primary-600">
+          <button 
+            onClick={() => navigate('/')}
+            className="flex flex-col items-center p-2 text-primary-600"
+          >
             <span className="text-2xl mb-1">🏠</span>
             <span className="text-xs">홈</span>
           </button>
-          <button className="flex flex-col items-center p-2 text-gray-600">
+          <button 
+            onClick={() => alert('지도 기능은 곧 출시됩니다!')}
+            className="flex flex-col items-center p-2 text-gray-600"
+          >
             <span className="text-2xl mb-1">🗺️</span>
             <span className="text-xs">지도</span>
           </button>
-          <button className="flex flex-col items-center p-2 text-gray-600">
+          <button 
+            onClick={() => alert('내 매치 기능은 곧 출시됩니다!')}
+            className="flex flex-col items-center p-2 text-gray-600"
+          >
             <span className="text-2xl mb-1">📋</span>
             <span className="text-xs">내 매치</span>
           </button>
-          <button className="flex flex-col items-center p-2 text-gray-600">
+          <button 
+            onClick={() => navigate('/profile')}
+            className="flex flex-col items-center p-2 text-gray-600"
+          >
             <span className="text-2xl mb-1">👤</span>
             <span className="text-xs">프로필</span>
           </button>
