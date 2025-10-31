@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Filter, MapPin, Plus, User } from 'lucide-react';
-import { Button, Input } from '@/shared/components';
+import { Button, Input, ThemeToggle } from '@/shared/components';
 import type { Court } from '@/shared/types';
 import { useMatches } from '../hooks/useMatches';
 import MatchCard from '../components/MatchCard';
@@ -31,22 +31,23 @@ export default function MatchListPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-10">
+      <header className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <span className="text-2xl">🏀</span>
-              <h1 className="text-xl font-bold text-gray-900">농구 픽업 매칭</h1>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white">농구 픽업 매칭</h1>
             </div>
             <div className="flex items-center gap-2">
+              <ThemeToggle />
               <button
                 onClick={() => navigate('/profile')}
-                className="p-2 hover:bg-gray-100 rounded-lg transition"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
                 title="프로필"
               >
-                <User className="w-5 h-5 text-gray-700" />
+                <User className="w-5 h-5 text-gray-700 dark:text-gray-300" />
               </button>
               <Button onClick={() => navigate('/match/create')}>
                 <Plus className="w-4 h-4 mr-1" />
@@ -58,12 +59,12 @@ export default function MatchListPage() {
       </header>
 
       {/* Location Bar */}
-      <div className="bg-white border-b">
+      <div className="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex items-center text-gray-700">
-            <MapPin className="w-5 h-5 mr-2 text-primary-600" />
+          <div className="flex items-center text-gray-700 dark:text-gray-300">
+            <MapPin className="w-5 h-5 mr-2 text-primary-600 dark:text-primary-500" />
             <span className="font-medium">내 위치: 서울 강남구</span>
-            <button className="ml-2 text-primary-600 text-sm hover:underline">
+            <button className="ml-2 text-primary-600 dark:text-primary-500 text-sm hover:underline">
               변경
             </button>
           </div>
@@ -93,8 +94,8 @@ export default function MatchListPage() {
         {/* Section: 지금 모집중 */}
         <section className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-900">🔥 지금 모집중</h2>
-            <button className="text-primary-600 text-sm hover:underline">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">🔥 지금 모집중</h2>
+            <button className="text-primary-600 dark:text-primary-500 text-sm hover:underline">
               전체보기
             </button>
           </div>
@@ -102,11 +103,11 @@ export default function MatchListPage() {
           {loading ? (
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-              <p className="mt-4 text-gray-600">매치를 불러오는 중...</p>
+              <p className="mt-4 text-gray-600 dark:text-gray-400">매치를 불러오는 중...</p>
             </div>
           ) : filteredMatches.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-xl">
-              <p className="text-gray-600">현재 모집 중인 매치가 없습니다.</p>
+            <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl">
+              <p className="text-gray-600 dark:text-gray-400">현재 모집 중인 매치가 없습니다.</p>
               <Button className="mt-4" onClick={() => navigate('/match/create')}>
                 첫 매치 만들기
               </Button>
@@ -142,7 +143,7 @@ export default function MatchListPage() {
       </main>
 
       {/* Bottom Navigation (Mobile) */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t dark:border-gray-700 md:hidden">
         <div className="flex justify-around py-2">
           <button 
             onClick={() => navigate('/')}
