@@ -13,10 +13,6 @@ export default function MatchListPage() {
   const [courts, setCourts] = useState<Court[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    fetchCourts();
-  }, []);
-
   async function fetchCourts() {
     try {
       const { data } = await apiClient.models.Court.list();
@@ -25,6 +21,10 @@ export default function MatchListPage() {
       console.error('Error fetching courts:', error);
     }
   }
+
+  useEffect(() => {
+    void fetchCourts();
+  }, []);
 
   const filteredMatches = matches.filter(match =>
     match.title.toLowerCase().includes(searchQuery.toLowerCase())

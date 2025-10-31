@@ -225,11 +225,12 @@ import { Button } from '@/shared/components';
 
 ## 주요 기능
 
-### 1. 사용자 인증 (Auth)
+### 1. 사용자 인증 (Auth) ✅
 
 #### 회원가입 & 로그인
 - AWS Cognito 기반 이메일 인증
 - 자동 토큰 관리
+- 역할 기반 접근 제어 (USER, ADMIN, SUPER_ADMIN)
 
 #### 온보딩 플로우
 사용자가 처음 로그인하면 3단계 온보딩:
@@ -246,12 +247,21 @@ if (needsOnboarding) {
 }
 ```
 
-### 2. 매치 시스템 (Match)
+### 2. 매치 시스템 (Match) ✅
 
 #### 매치 리스트
 - 모집 중인 게임 목록 표시
 - 실시간 참가 인원 업데이트
-- 필터링 (날짜, 게임 타입, 레벨 등)
+- 검색 및 필터링
+- 반응형 그리드 레이아웃
+
+#### 매치 상세 페이지
+- 완전한 매치 정보 표시
+- **참가하기** 기능 (실시간 업데이트)
+- 참가자 목록 표시
+- 코트 상세 정보
+- 게임 규칙 안내
+- 공유 기능 (네이티브 공유 API)
 
 #### 매치 카드 정보
 - 게임 타입 (3v3 / 5v5)
@@ -260,18 +270,55 @@ if (needsOnboarding) {
 - 레벨 범위
 - 참가 인원 / 최대 인원
 - 참가 비용
+- 상태 뱃지 (모집중/마감/참가중)
 
 ```typescript
 // useMatches 훅 사용 예시
 const { matches, loading, refetch } = useMatches({ status: 'OPEN' });
+
+// useMatch 훅 사용 예시 (상세)
+const { match, loading, refetch } = useMatch(matchId);
+
+// 매치 참가
+const { joinMatch, loading } = useJoinMatch();
+await joinMatch(matchId, userId);
 ```
 
-### 3. 농구장 정보 (Court)
+### 3. 관리자 시스템 (Admin) ✅
 
-- 농구장 위치 (지도)
+#### 관리자 대시보드
+- 전체 통계 (사용자, 매치, 코트 수)
+- 최근 가입 사용자 목록
+- 빠른 작업 메뉴
+
+#### 권한 관리
+- USER: 일반 사용자
+- ADMIN: 관리자 (사용자/매치 관리)
+- SUPER_ADMIN: 최고 관리자 (권한 부여)
+
+#### 자동 라우팅
+- 관리자 로그인 시 자동으로 대시보드로 이동
+- 권한별 접근 제어
+
+### 4. 농구장 정보 (Court)
+
+- 농구장 위치 (위도/경도)
 - 시설 정보 (실내/실외, 바닥 재질, 편의시설)
 - 파트너 코트 여부
+- AI 카메라 구장 표시
 - 시간당 대관료
+
+### 5. 라우팅 (React Router) ✅
+
+```typescript
+/ → MatchListPage (메인 - 매치 리스트)
+/match/:matchId → MatchDetailPage (매치 상세)
+/admin → AdminDashboardPage (관리자 대시보드)
+```
+
+- URL 기반 네비게이션
+- 브라우저 뒤로가기/앞으로가기 지원
+- 동적 라우트 생성
 
 ---
 
@@ -779,21 +826,26 @@ gameType: 'THREE_V_THREE' | 'FIVE_V_FIVE'
 - [x] 온보딩 플로우
 - [x] 매치 리스트 페이지
 - [x] MSA 아키텍처 적용
+- [x] 관리자 페이지 (대시보드, 권한 관리)
+- [x] React Router 통합
+- [x] 매치 상세 페이지 (참가 기능)
 
 ### Phase 2 (진행 중)
-- [ ] 매치 상세 페이지
 - [ ] 매치 생성 페이지
 - [ ] 프로필 페이지
-- [ ] React Router 통합
+- [ ] 하단 네비게이션 바
 
-### Phase 3
+### Phase 3 (계획)
+- [ ] 매치 참가 취소 기능
+- [ ] 매치 수정/삭제 기능
+- [ ] 채팅 기능
 - [ ] 평가 시스템
 - [ ] 뱃지 시스템
-- [ ] 실시간 알림
 
-### Phase 4
+### Phase 4 (향후)
 - [ ] 지도 통합 (Kakao/Naver)
 - [ ] 결제 시스템
+- [ ] 실시간 알림 (Push)
 - [ ] AI 카메라 연동
 
 ---

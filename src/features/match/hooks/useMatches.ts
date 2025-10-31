@@ -28,7 +28,8 @@ export const useMatches = (filters?: MatchFilters) => {
   };
 
   useEffect(() => {
-    fetchMatches();
+    void fetchMatches();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(filters)]);
 
   return { matches, loading, error, refetch: fetchMatches };
@@ -57,8 +58,9 @@ export const useMatch = (id: string) => {
 
   useEffect(() => {
     if (id) {
-      fetchMatch();
+      void fetchMatch();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return { match, loading, error, refetch: fetchMatch };

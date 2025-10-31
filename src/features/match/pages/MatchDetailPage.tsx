@@ -37,20 +37,20 @@ export default function MatchDetailPage() {
   }, []);
 
   useEffect(() => {
+    const fetchCourt = async () => {
+      if (!match?.courtId) return;
+      try {
+        const { data } = await apiClient.models.Court.get({ id: match.courtId });
+        setCourt(data as Court);
+      } catch (error) {
+        console.error('Error fetching court:', error);
+      }
+    };
+
     if (match?.courtId) {
       fetchCourt();
     }
-  }, [match]);
-
-  const fetchCourt = async () => {
-    if (!match?.courtId) return;
-    try {
-      const { data } = await apiClient.models.Court.get({ id: match.courtId });
-      setCourt(data as Court);
-    } catch (error) {
-      console.error('Error fetching court:', error);
-    }
-  };
+  }, [match?.courtId]);
 
   const handleJoinMatch = async () => {
     if (!matchId || !currentUserId) {

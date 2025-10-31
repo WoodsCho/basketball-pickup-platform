@@ -11,12 +11,6 @@ export function useAuth(cognitoUser: CognitoUser | null) {
   const [loading, setLoading] = useState(true);
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
 
-  useEffect(() => {
-    if (cognitoUser) {
-      checkUserProfile();
-    }
-  }, [cognitoUser]);
-
   const checkUserProfile = async () => {
     if (!cognitoUser) return;
 
@@ -37,6 +31,13 @@ export function useAuth(cognitoUser: CognitoUser | null) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (cognitoUser) {
+      void checkUserProfile();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cognitoUser]);
 
   const completeOnboarding = async (data: OnboardingData): Promise<boolean> => {
     if (!cognitoUser) return false;

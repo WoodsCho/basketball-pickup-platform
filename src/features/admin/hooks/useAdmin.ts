@@ -15,10 +15,6 @@ export const useAdminCheck = (userId: string) => {
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState<UserRole | null>(null);
 
-  useEffect(() => {
-    checkRole();
-  }, [userId]);
-
   const checkRole = async () => {
     setLoading(true);
     const userRole = await adminService.checkAdminRole(userId);
@@ -27,6 +23,11 @@ export const useAdminCheck = (userId: string) => {
     setIsSuperAdmin(userRole === 'SUPER_ADMIN');
     setLoading(false);
   };
+
+  useEffect(() => {
+    void checkRole();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   return { isAdmin, isSuperAdmin, role, loading, refetch: checkRole };
 };
@@ -38,10 +39,6 @@ export const useAllUsers = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
 
   const fetchUsers = async () => {
     try {
@@ -55,6 +52,10 @@ export const useAllUsers = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    void fetchUsers();
+  }, []);
 
   return { users, loading, error, refetch: fetchUsers };
 };
@@ -71,16 +72,16 @@ export const useAdminStatistics = () => {
   });
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchStatistics();
-  }, []);
-
   const fetchStatistics = async () => {
     setLoading(true);
     const stats = await adminService.getStatistics();
     setStatistics(stats);
     setLoading(false);
   };
+
+  useEffect(() => {
+    void fetchStatistics();
+  }, []);
 
   return { statistics, loading, refetch: fetchStatistics };
 };
