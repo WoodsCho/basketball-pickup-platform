@@ -1,39 +1,26 @@
-import { useEffect, useState } from "react";
-import type { Schema } from "../amplify/data/resource";
-import { generateClient } from "aws-amplify/data";
-
-const client = generateClient<Schema>();
+import { Authenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
+import HomePage from './pages/HomePage';
 
 function App() {
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
-
-  useEffect(() => {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
-    });
-  }, []);
-
-  function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
-  }
-
   return (
-    <main>
-      <h1>My todos</h1>
-      <button onClick={createTodo}>+ new</button>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>{todo.content}</li>
-        ))}
-      </ul>
-      <div>
-        🥳 App successfully hosted. Try creating a new todo.
-        <br />
-        <a href="https://docs.amplify.aws/react/start/quickstart/#make-frontend-updates">
-          Review next step of this tutorial.
-        </a>
-      </div>
-    </main>
+    <Authenticator>
+      {({ signOut, user }) => (
+        <div>
+          <HomePage />
+          {/* Debug info - remove later */}
+          <div className="fixed bottom-20 right-4 bg-white p-4 rounded-lg shadow-lg text-xs md:bottom-4">
+            <p className="font-bold">로그인: {user?.signInDetails?.loginId}</p>
+            <button 
+              onClick={signOut}
+              className="mt-2 text-red-600 hover:underline"
+            >
+              로그아웃
+            </button>
+          </div>
+        </div>
+      )}
+    </Authenticator>
   );
 }
 
