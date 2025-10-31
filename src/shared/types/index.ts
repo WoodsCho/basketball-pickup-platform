@@ -91,21 +91,19 @@ export type Court = {
   id: string;
   name: string;
   address: string;
-  location: {
-    lat: number;
-    lng: number;
-  };
-  images: string[];
+  lat: number;
+  lng: number;
+  images?: string[];
   
   // Facility info
-  courtType: CourtType;
-  courtSize: CourtSize;
-  floor: string; // 우레탄, 마루 등
-  facilities: string[]; // 샤워실, 주차장 등
+  courtType?: CourtType;
+  courtSize?: CourtSize;
+  floor?: string; // 우레탄, 마루 등
+  facilities?: string[]; // 샤워실, 주차장 등
   
   // Partner court
-  isPartner: boolean;
-  hasAICamera: boolean;
+  isPartner?: boolean;
+  hasAICamera?: boolean;
   
   // Price
   pricePerHour: number;

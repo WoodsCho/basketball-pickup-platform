@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Filter, MapPin, Plus } from 'lucide-react';
 import { Button, Input } from '@/shared/components';
 import type { Court } from '@/shared/types';
@@ -7,6 +8,7 @@ import MatchCard from '../components/MatchCard';
 import { apiClient } from '@/core/api/client';
 
 export default function MatchListPage() {
+  const navigate = useNavigate();
   const { matches, loading } = useMatches({ status: 'OPEN' });
   const [courts, setCourts] = useState<Court[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -109,7 +111,7 @@ export default function MatchListPage() {
                     key={match.id}
                     match={match}
                     court={court}
-                    onClick={() => window.location.href = `/match/${match.id}`}
+                    onClick={() => navigate(`/match/${match.id}`)}
                   />
                 );
               })}

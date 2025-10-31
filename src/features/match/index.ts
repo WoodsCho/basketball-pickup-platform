@@ -21,4 +21,7 @@ export type {
 
 // Components
 export { default as MatchCard } from './components/MatchCard';
+
+// Pages
 export { default as MatchListPage } from './pages/MatchListPage';
+export { default as MatchDetailPage } from './pages/MatchDetailPage';

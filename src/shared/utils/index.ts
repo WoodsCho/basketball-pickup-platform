@@ -4,3 +4,4 @@
  */
 
 export * from './helpers';
+export { getLevelLabel, getLevelCategory, getPositionLabel } from '../types';
