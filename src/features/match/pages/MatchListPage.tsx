@@ -1,44 +1,23 @@
 import { useState, useEffect } from 'react';
 import { Filter, MapPin, Plus } from 'lucide-react';
-import MatchCard from '../components/match/MatchCard';
-import Button from '../components/ui/Button';
-import Input from '../components/ui/Input';
-import type { Match, Court } from '../types';
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '../../amplify/data/resource';
+import { Button, Input } from '@/shared/components';
+import type { Court } from '@/shared/types';
+import { useMatches } from '../hooks/useMatches';
+import MatchCard from '../components/MatchCard';
+import { apiClient } from '@/core/api/client';
 
-const client = generateClient<Schema>();
-
-export default function HomePage() {
-  const [matches, setMatches] = useState<Match[]>([]);
+export default function MatchListPage() {
+  const { matches, loading } = useMatches({ status: 'OPEN' });
   const [courts, setCourts] = useState<Court[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    fetchMatches();
     fetchCourts();
   }, []);
 
-  async function fetchMatches() {
-    try {
-      const { data } = await client.models.Match.list({
-        filter: {
-          status: { eq: 'OPEN' }
-        }
-      });
-      // Transform data to Match type
-      setMatches(data as any);
-    } catch (error) {
-      console.error('Error fetching matches:', error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   async function fetchCourts() {
     try {
-      const { data } = await client.models.Court.list();
+      const { data } = await apiClient.models.Court.list();
       setCourts(data as any);
     } catch (error) {
       console.error('Error fetching courts:', error);

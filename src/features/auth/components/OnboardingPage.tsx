@@ -1,11 +1,6 @@
 import { useState } from 'react';
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '../../amplify/data/resource';
-import Button from '../components/ui/Button';
-import Input from '../components/ui/Input';
-import Card from '../components/ui/Card';
-
-const client = generateClient<Schema>();
+import { Button, Input, Card } from '@/shared/components';
+import { authService } from '../services/authService';
 
 interface OnboardingPageProps {
   cognitoUser: any;
@@ -26,7 +21,7 @@ export default function OnboardingPage({ cognitoUser, onComplete }: OnboardingPa
     setLoading(true);
     try {
       // User 테이블에 프로필 생성
-      const { data: newProfile } = await client.models.User.create({
+      const newProfile = await authService.createUserProfile({
         id: cognitoUser.userId,
         email: cognitoUser.signInDetails?.loginId || '',
         name: formData.name,
@@ -39,7 +34,11 @@ export default function OnboardingPage({ cognitoUser, onComplete }: OnboardingPa
         noShowCount: 0,
       });
 
-      onComplete(newProfile);
+      if (newProfile) {
+        onComplete(newProfile);
+      } else {
+        throw new Error('프로필 생성 실패');
+      }
     } catch (error) {
       console.error('Error creating profile:', error);
       alert('프로필 생성 중 오류가 발생했습니다.');

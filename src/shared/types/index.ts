@@ -55,12 +55,11 @@ export type Match = {
   
   // Players
   maxPlayers: number;
-  currentPlayers: string[]; // user IDs
-  positionSlots: {
-    guard: number;
-    forward: number;
-    center: number;
-  };
+  currentPlayerIds?: string[]; // user IDs (from DB)
+  currentPlayers: string[]; // user IDs (for display compatibility)
+  guardSlots: number;
+  forwardSlots: number;
+  centerSlots: number;
   
   // Price
   pricePerPerson: number;
@@ -68,7 +67,8 @@ export type Match = {
   // Status
   status: MatchStatus;
   
-  createdBy: string; // user ID
+  // Owner
+  createdBy?: string; // user ID
   createdAt: string;
   updatedAt: string;
 };

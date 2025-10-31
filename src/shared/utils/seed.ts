@@ -3,10 +3,7 @@
  * Run this after authentication to populate the database
  */
 
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '../../amplify/data/resource';
-
-const client = generateClient<Schema>();
+import { apiClient as client } from '../../core/api/client';
 
 export async function seedCourts() {
   const courts = [

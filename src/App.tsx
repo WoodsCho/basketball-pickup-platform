@@ -1,12 +1,7 @@
-import { useEffect, useState } from 'react';
 import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '../amplify/data/resource';
-import HomePage from './pages/HomePage';
-import OnboardingPage from './pages/OnboardingPage';
-
-const client = generateClient<Schema>();
+import { useAuth, OnboardingPage } from '@/features/auth';
+import { MatchListPage } from '@/features/match';
 
 function App() {
   return (
@@ -19,41 +14,7 @@ function App() {
 }
 
 function AppContent({ user, signOut }: { user: any; signOut?: any }) {
-  const [userProfile, setUserProfile] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [needsOnboarding, setNeedsOnboarding] = useState(false);
-
-  useEffect(() => {
-    checkUserProfile();
-  }, [user]);
-
-  const checkUserProfile = async () => {
-    try {
-      // Cognito userId로 User 테이블 조회
-      const { data: profile } = await client.models.User.get({
-        id: user.userId
-      });
-
-      if (profile) {
-        // User 프로필이 이미 존재
-        setUserProfile(profile);
-        setNeedsOnboarding(false);
-      } else {
-        // User 프로필이 없음 → 온보딩 필요
-        setNeedsOnboarding(true);
-      }
-    } catch (error) {
-      console.error('Error checking user profile:', error);
-      setNeedsOnboarding(true);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleOnboardingComplete = (profile: any) => {
-    setUserProfile(profile);
-    setNeedsOnboarding(false);
-  };
+  const { user: userProfile, loading, needsOnboarding, completeOnboarding } = useAuth(user);
 
   // 로딩 중
   if (loading) {
@@ -72,7 +33,7 @@ function AppContent({ user, signOut }: { user: any; signOut?: any }) {
     return (
       <OnboardingPage
         cognitoUser={user}
-        onComplete={handleOnboardingComplete}
+        onComplete={completeOnboarding}
       />
     );
   }
@@ -80,7 +41,7 @@ function AppContent({ user, signOut }: { user: any; signOut?: any }) {
   // 정상 플로우
   return (
     <div>
-      <HomePage />
+      <MatchListPage />
       
       {/* 디버그 정보 */}
       <div className="fixed bottom-20 right-4 bg-white p-4 rounded-lg shadow-lg text-xs md:bottom-4">

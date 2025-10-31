@@ -1,9 +1,8 @@
 import { Calendar, Clock, Users, MapPin } from 'lucide-react';
-import Card from '../ui/Card';
-import Badge from '../ui/Badge';
-import { formatDate, formatTime, formatPrice } from '../../utils/helpers';
-import { getLevelLabel } from '../../types';
-import type { Match, Court } from '../../types';
+import { Card, Badge } from '@/shared/components';
+import { formatDate, formatTime, formatPrice } from '@/shared/utils/helpers';
+import { getLevelLabel } from '@/shared/types';
+import type { Match, Court } from '@/shared/types';
 
 interface MatchCardProps {
   match: Match;

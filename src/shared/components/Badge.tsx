@@ -1,6 +1,6 @@
 import React from 'react';
-import { cn, getBadgeColor } from '../../utils/helpers';
-import type { BadgeLevel } from '../../types';
+import { cn, getBadgeColor } from '../utils/helpers';
+import type { BadgeLevel } from '../types';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   level?: BadgeLevel;
