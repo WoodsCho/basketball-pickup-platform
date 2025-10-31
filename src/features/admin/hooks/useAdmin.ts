@@ -85,3 +85,31 @@ export const useAdminStatistics = () => {
 
   return { statistics, loading, refetch: fetchStatistics };
 };
+
+/**
+ * 코트 목록 훅
+ */
+export const useAllCourts = () => {
+  const [courts, setCourts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const fetchCourts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await adminService.getAllCourts();
+      setCourts(data);
+    } catch (err) {
+      setError(err as Error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void fetchCourts();
+  }, []);
+
+  return { courts, loading, error, refetch: fetchCourts };
+};

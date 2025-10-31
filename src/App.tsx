@@ -3,7 +3,7 @@ import '@aws-amplify/ui-react/styles.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { useAuth, OnboardingPage } from '@/features/auth';
 import { MatchListPage, MatchDetailPage, CreateMatchPage } from '@/features/match';
-import { AdminDashboardPage, useAdminCheck } from '@/features/admin';
+import { AdminDashboardPage, CourtManagementPage, useAdminCheck } from '@/features/admin';
 import { useEffect, useState } from 'react';
 
 function App() {
@@ -47,6 +47,10 @@ function AppContent({ user, signOut }: { user: any; signOut?: any }) {
         {
           path: '/admin',
           element: <AdminDashboardPage />,
+        },
+        {
+          path: '/admin/courts',
+          element: <CourtManagementPage />,
         },
       ]);
       setRouter(userRouter);

@@ -4,7 +4,7 @@
  */
 import { createBrowserRouter } from 'react-router-dom';
 import { MatchListPage, MatchDetailPage, CreateMatchPage } from '@/features/match';
-import { AdminDashboardPage } from '@/features/admin';
+import { AdminDashboardPage, CourtManagementPage } from '@/features/admin';
 
 export const router = createBrowserRouter([
   {
@@ -22,5 +22,9 @@ export const router = createBrowserRouter([
   {
     path: '/admin',
     element: <AdminDashboardPage />,
+  },
+  {
+    path: '/admin/courts',
+    element: <CourtManagementPage />,
   },
 ]);

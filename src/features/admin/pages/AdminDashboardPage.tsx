@@ -2,11 +2,13 @@
  * Admin Dashboard Page
  * 관리자 대시보드
  */
+import { useNavigate } from 'react-router-dom';
 import { Users, Calendar, MapPin, Activity } from 'lucide-react';
 import { Card } from '@/shared/components';
 import { useAdminStatistics, useAllUsers } from '../hooks/useAdmin';
 
 export default function AdminDashboardPage() {
+  const navigate = useNavigate();
   const { statistics, loading: statsLoading } = useAdminStatistics();
   const { users, loading: usersLoading } = useAllUsers();
 
@@ -192,7 +194,7 @@ export default function AdminDashboardPage() {
               </div>
             </Card>
             
-            <Card hover className="p-6 cursor-pointer">
+            <Card hover className="p-6 cursor-pointer" onClick={() => navigate('/admin/courts')}>
               <div className="text-center">
                 <MapPin className="w-12 h-12 text-primary-600 mx-auto mb-3" />
                 <h3 className="font-bold text-gray-900 mb-1">코트 관리</h3>

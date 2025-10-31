@@ -7,7 +7,8 @@
 export { adminService } from './services/adminService';
 
 // Hooks
-export { useAdminCheck, useAllUsers, useAdminStatistics } from './hooks/useAdmin';
+export { useAdminCheck, useAllUsers, useAdminStatistics, useAllCourts } from './hooks/useAdmin';
 
 // Pages
 export { default as AdminDashboardPage } from './pages/AdminDashboardPage';
+export { default as CourtManagementPage } from './pages/CourtManagementPage';

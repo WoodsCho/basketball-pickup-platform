@@ -141,6 +141,61 @@ export class AdminService {
       };
     }
   }
+
+  /**
+   * 모든 코트 조회
+   */
+  async getAllCourts(): Promise<any[]> {
+    try {
+      const { data } = await apiClient.models.Court.list();
+      return data || [];
+    } catch (error) {
+      console.error('[AdminService] Error getting courts:', error);
+      return [];
+    }
+  }
+
+  /**
+   * 코트 추가
+   */
+  async createCourt(courtData: any): Promise<any | null> {
+    try {
+      const { data } = await apiClient.models.Court.create(courtData);
+      return data;
+    } catch (error) {
+      console.error('[AdminService] Error creating court:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 코트 수정
+   */
+  async updateCourt(courtId: string, courtData: any): Promise<boolean> {
+    try {
+      await apiClient.models.Court.update({
+        id: courtId,
+        ...courtData,
+      });
+      return true;
+    } catch (error) {
+      console.error('[AdminService] Error updating court:', error);
+      return false;
+    }
+  }
+
+  /**
+   * 코트 삭제
+   */
+  async deleteCourt(courtId: string): Promise<boolean> {
+    try {
+      await apiClient.models.Court.delete({ id: courtId });
+      return true;
+    } catch (error) {
+      console.error('[AdminService] Error deleting court:', error);
+      return false;
+    }
+  }
 }
 
 export const adminService = new AdminService();
