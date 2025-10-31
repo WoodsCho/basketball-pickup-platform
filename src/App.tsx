@@ -28,6 +28,27 @@ function AppContent({ user, signOut }: { user: any; signOut?: any }) {
     }
   }, [user]);
 
+  // 라우터 생성 (사용자 정보와 함께)
+  useEffect(() => {
+    if (!loading && !adminLoading && !needsOnboarding) {
+      const userRouter = createBrowserRouter([
+        {
+          path: '/',
+          element: isAdmin ? <AdminDashboardPage /> : <MatchListPage />,
+        },
+        {
+          path: '/match/:matchId',
+          element: <MatchDetailPage />,
+        },
+        {
+          path: '/admin',
+          element: <AdminDashboardPage />,
+        },
+      ]);
+      setRouter(userRouter);
+    }
+  }, [loading, adminLoading, needsOnboarding, isAdmin]);
+
   // 로딩 중
   if (loading || adminLoading) {
     return (
@@ -49,27 +70,6 @@ function AppContent({ user, signOut }: { user: any; signOut?: any }) {
       />
     );
   }
-
-  // 라우터 생성 (사용자 정보와 함께)
-  useEffect(() => {
-    if (!loading && !adminLoading && !needsOnboarding) {
-      const userRouter = createBrowserRouter([
-        {
-          path: '/',
-          element: isAdmin ? <AdminDashboardPage /> : <MatchListPage />,
-        },
-        {
-          path: '/match/:matchId',
-          element: <MatchDetailPage />,
-        },
-        {
-          path: '/admin',
-          element: <AdminDashboardPage />,
-        },
-      ]);
-      setRouter(userRouter);
-    }
-  }, [loading, adminLoading, needsOnboarding, isAdmin]);
 
   // 관리자 또는 일반 사용자 플로우
   if (router) {
