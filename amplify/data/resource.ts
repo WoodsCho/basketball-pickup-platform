@@ -22,6 +22,9 @@ const schema = a.schema({
       phone: a.string().required(),
       profileImage: a.string(),
       
+      // Role (권한 관리)
+      role: a.enum(['USER', 'ADMIN', 'SUPER_ADMIN']),
+      
       // Basketball info
       position: a.enum(['GUARD', 'FORWARD', 'CENTER', 'ALL_ROUND']),
       level: a.integer().required().default(1500), // 1000-3000
@@ -35,6 +38,7 @@ const schema = a.schema({
     .authorization((allow) => [
       allow.owner(),
       allow.authenticated().to(['read']),
+      allow.groups(['ADMIN', 'SUPER_ADMIN']).to(['read', 'update', 'delete']),
     ]),
 
   // ============================================================

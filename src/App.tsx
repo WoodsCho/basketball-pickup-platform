@@ -2,6 +2,7 @@ import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { useAuth, OnboardingPage } from '@/features/auth';
 import { MatchListPage } from '@/features/match';
+import { AdminDashboardPage, useAdminCheck } from '@/features/admin';
 
 function App() {
   return (
@@ -15,9 +16,10 @@ function App() {
 
 function AppContent({ user, signOut }: { user: any; signOut?: any }) {
   const { user: userProfile, loading, needsOnboarding, completeOnboarding } = useAuth(user);
+  const { isAdmin, loading: adminLoading } = useAdminCheck(user?.userId || '');
 
   // 로딩 중
-  if (loading) {
+  if (loading || adminLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -38,7 +40,12 @@ function AppContent({ user, signOut }: { user: any; signOut?: any }) {
     );
   }
 
-  // 정상 플로우
+  // 관리자 페이지
+  if (isAdmin) {
+    return <AdminDashboardPage />;
+  }
+
+  // 일반 사용자 플로우
   return (
     <div>
       <MatchListPage />

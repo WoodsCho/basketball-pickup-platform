@@ -24,7 +24,12 @@ export class AuthService {
    */
   async createUserProfile(userData: Omit<User, 'createdAt' | 'updatedAt'>): Promise<User | null> {
     try {
-      const { data } = await apiClient.models.User.create(userData);
+      // role이 없으면 기본값 'USER' 설정
+      const dataWithRole = {
+        ...userData,
+        role: userData.role || 'USER',
+      };
+      const { data } = await apiClient.models.User.create(dataWithRole);
       return data as User | null;
     } catch (error) {
       console.error('[AuthService] Error creating user profile:', error);

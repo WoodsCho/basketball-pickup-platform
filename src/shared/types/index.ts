@@ -4,6 +4,7 @@
 
 // User Types
 export type Position = 'GUARD' | 'FORWARD' | 'CENTER' | 'ALL_ROUND';
+export type UserRole = 'USER' | 'ADMIN' | 'SUPER_ADMIN';
 
 export type User = {
   id: string;
@@ -11,6 +12,9 @@ export type User = {
   name: string;
   phone: string;
   profileImage?: string;
+  
+  // Role
+  role?: UserRole;
   
   // Basketball info
   position: Position;
@@ -23,7 +27,7 @@ export type User = {
   noShowCount: number;
   
   // Badges
-  badges: string[]; // badge IDs
+  badges?: string[]; // badge IDs
   
   createdAt: string;
   updatedAt: string;

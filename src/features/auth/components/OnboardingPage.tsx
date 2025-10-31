@@ -28,6 +28,7 @@ export default function OnboardingPage({ cognitoUser, onComplete }: OnboardingPa
         phone: formData.phone,
         position: formData.position,
         level: formData.level,
+        role: 'USER', // 기본값은 일반 사용자
         totalMatches: 0,
         totalRating: 0,
         attendanceRate: 100,

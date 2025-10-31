@@ -1,7 +1,7 @@
 /**
  * Auth Module Types
  */
-import type { Position } from '../../../shared/types';
+import type { Position, UserRole } from '../../../shared/types';
 
 export interface User {
   id: string;
@@ -9,6 +9,9 @@ export interface User {
   name: string;
   phone: string;
   profileImage?: string;
+  
+  // Role
+  role?: UserRole;
   
   // Basketball info
   position: Position;
