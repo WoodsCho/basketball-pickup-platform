@@ -4,7 +4,7 @@
  */
 import { useNavigate } from 'react-router-dom';
 import { Users, Calendar, MapPin, Activity } from 'lucide-react';
-import { Card } from '@/shared/components';
+import { Card, AdminModeToggle, ThemeToggle } from '@/shared/components';
 import { useAdminStatistics, useAllUsers } from '../hooks/useAdmin';
 
 export default function AdminDashboardPage() {
@@ -55,11 +55,13 @@ export default function AdminDashboardPage() {
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">관리자 대시보드</h1>
-              <p className="text-gray-600 mt-1">플랫폼 전체 현황을 관리합니다</p>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">관리자 대시보드</h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-1">플랫폼 전체 현황을 관리합니다</p>
             </div>
-            <div className="flex items-center space-x-2">
-              <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+            <div className="flex items-center gap-2">
+              <AdminModeToggle />
+              <ThemeToggle />
+              <span className="px-3 py-1 bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300 rounded-full text-sm font-medium">
                 관리자 모드
               </span>
             </div>

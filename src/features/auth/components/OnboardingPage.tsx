@@ -35,14 +35,27 @@ export default function OnboardingPage({ cognitoUser, onComplete }: OnboardingPa
         noShowCount: 0,
       });
 
-      if (newProfile) {
-        onComplete(newProfile);
-      } else {
-        throw new Error('프로필 생성 실패');
-      }
+      console.log('[OnboardingPage] Profile created:', newProfile);
+      
+      // 성공적으로 생성됨
+      onComplete(newProfile);
     } catch (error) {
-      console.error('Error creating profile:', error);
-      alert('프로필 생성 중 오류가 발생했습니다.');
+      console.error('[OnboardingPage] Error creating profile:', error);
+      
+      // 에러가 발생해도 실제로는 생성되었을 수 있으므로
+      // 프로필을 다시 확인해봄
+      try {
+        const existingProfile = await authService.getUserProfile(cognitoUser.userId);
+        if (existingProfile) {
+          console.log('[OnboardingPage] Profile exists, proceeding:', existingProfile);
+          onComplete(existingProfile);
+          return;
+        }
+      } catch (checkError) {
+        console.error('[OnboardingPage] Error checking profile:', checkError);
+      }
+      
+      alert('프로필 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
     } finally {
       setLoading(false);
     }

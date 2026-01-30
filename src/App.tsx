@@ -3,7 +3,18 @@ import '@aws-amplify/ui-react/styles.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { useAuth, OnboardingPage } from '@/features/auth';
 import { MatchListPage, MatchDetailPage, CreateMatchPage } from '@/features/match';
-import { AdminDashboardPage, CourtManagementPage, useAdminCheck } from '@/features/admin';
+import { TeamListPage, SessionListPage } from '@/features/team';
+import CreateTeamPage from '@/features/team/pages/CreateTeamPage';
+import TeamDetailPage from '@/features/team/pages/TeamDetailPage';
+import CreateSessionPage from '@/features/team/pages/CreateSessionPage';
+import SessionDetailPage from '@/features/team/pages/SessionDetailPage';
+import { 
+  AdminDashboardPage, 
+  CourtManagementPage, 
+  useAdminCheck,
+  AdminModeProvider,
+  useAdminMode 
+} from '@/features/admin';
 import { ProfilePage } from '@/features/user';
 import { useEffect, useState } from 'react';
 
@@ -11,7 +22,9 @@ function App() {
   return (
     <Authenticator>
       {({ signOut, user }) => (
-        <AppContent user={user} signOut={signOut} />
+        <AdminModeProvider>
+          <AppContent user={user} signOut={signOut} />
+        </AdminModeProvider>
       )}
     </Authenticator>
   );
@@ -20,6 +33,7 @@ function App() {
 function AppContent({ user, signOut }: { user: any; signOut?: any }) {
   const { user: userProfile, loading, needsOnboarding, completeOnboarding } = useAuth(user);
   const { isAdmin, loading: adminLoading } = useAdminCheck(user?.userId || '');
+  const { isAdminMode } = useAdminMode();
   const [router, setRouter] = useState<ReturnType<typeof createBrowserRouter> | null>(null);
 
   // 사용자 ID를 localStorage에 저장 (MatchDetailPage에서 사용)
@@ -32,10 +46,41 @@ function AppContent({ user, signOut }: { user: any; signOut?: any }) {
   // 라우터 생성 (사용자 정보와 함께)
   useEffect(() => {
     if (!loading && !adminLoading && !needsOnboarding) {
+      // 관리자 모드일 때와 일반 모드일 때의 홈 페이지 결정
+      const homePage = isAdmin && isAdminMode ? <AdminDashboardPage /> : <TeamListPage />;
+      
       const userRouter = createBrowserRouter([
         {
           path: '/',
-          element: isAdmin ? <AdminDashboardPage /> : <MatchListPage />,
+          element: homePage,
+        },
+        {
+          path: '/teams',
+          element: <TeamListPage />,
+        },
+        {
+          path: '/team/create',
+          element: <CreateTeamPage />,
+        },
+        {
+          path: '/team/:teamId',
+          element: <TeamDetailPage />,
+        },
+        {
+          path: '/team/:teamId/session/create',
+          element: <CreateSessionPage />,
+        },
+        {
+          path: '/sessions',
+          element: <SessionListPage />,
+        },
+        {
+          path: '/session/:sessionId',
+          element: <SessionDetailPage />,
+        },
+        {
+          path: '/matches', // 기존 픽업 게임은 하위 경로로
+          element: <MatchListPage />,
         },
         {
           path: '/match/create',
@@ -60,7 +105,7 @@ function AppContent({ user, signOut }: { user: any; signOut?: any }) {
       ]);
       setRouter(userRouter);
     }
-  }, [loading, adminLoading, needsOnboarding, isAdmin]);
+  }, [loading, adminLoading, needsOnboarding, isAdmin, isAdminMode]);
 
   // 로딩 중
   if (loading || adminLoading) {

@@ -2,7 +2,7 @@
  * 프로필 페이지
  * 사용자의 프로필 정보, 통계, 매치 히스토리 표시
  */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Edit, 
@@ -10,16 +10,17 @@ import {
   Trophy, 
   Target, 
   Users,
-  ArrowLeft,
   Save,
   X
 } from 'lucide-react';
 import { useUserProfile, useUserStats, useUserMatches } from '../hooks/useUser';
 import { userService } from '../services/userService';
+import { teamService } from '@/features/team/services/teamService';
 import Button from '@/shared/components/Button';
-import { Card } from '@/shared/components';
+import { Card, AdminModeToggle, ThemeToggle } from '@/shared/components';
 import { getPositionLabel, getLevelLabel } from '@/shared/types';
 import type { Position } from '@/shared/types';
+import type { Team } from '@/features/team/types/team.types';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -27,6 +28,8 @@ export default function ProfilePage() {
   const { user, loading: userLoading, refetch } = useUserProfile(userId);
   const { stats, loading: statsLoading } = useUserStats(userId);
   const { matches, loading: matchesLoading } = useUserMatches(userId);
+  const [myTeams, setMyTeams] = useState<Team[]>([]);
+  const [teamsLoading, setTeamsLoading] = useState(true);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
@@ -35,6 +38,24 @@ export default function ProfilePage() {
     position: 'GUARD' as Position,
     level: 1500,
   });
+
+  useEffect(() => {
+    loadMyTeams();
+  }, [userId]);
+
+  async function loadMyTeams() {
+    try {
+      setTeamsLoading(true);
+      const allTeams = await teamService.listTeams();
+      // 내가 멤버인 팀 필터링
+      const myTeamsList = allTeams.filter(team => team.memberIds.includes(userId));
+      setMyTeams(myTeamsList);
+    } catch (error) {
+      console.error('Error loading teams:', error);
+    } finally {
+      setTeamsLoading(false);
+    }
+  }
 
   const handleEditClick = () => {
     if (user) {
@@ -71,10 +92,28 @@ export default function ProfilePage() {
   // 로딩 상태
   if (userLoading || statsLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">로딩 중...</p>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        {/* Header */}
+        <header className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-10">
+          <div className="max-w-7xl mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <span className="text-2xl">👤</span>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">프로필</h1>
+              </div>
+              <div className="flex items-center gap-2">
+                <AdminModeToggle />
+                <ThemeToggle />
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-gray-100 mx-auto"></div>
+            <p className="mt-4 text-gray-600 dark:text-gray-400">로딩 중...</p>
+          </div>
         </div>
       </div>
     );
@@ -82,12 +121,30 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <p className="text-gray-600">사용자 정보를 찾을 수 없습니다.</p>
-          <Button onClick={() => navigate('/')} className="mt-4">
-            홈으로 돌아가기
-          </Button>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        {/* Header */}
+        <header className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-10">
+          <div className="max-w-7xl mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <span className="text-2xl">👤</span>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">프로필</h1>
+              </div>
+              <div className="flex items-center gap-2">
+                <AdminModeToggle />
+                <ThemeToggle />
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <p className="text-gray-600 dark:text-gray-400">사용자 정보를 찾을 수 없습니다.</p>
+            <Button onClick={() => navigate('/')} className="mt-4">
+              홈으로 돌아가기
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -100,29 +157,28 @@ export default function ProfilePage() {
     .slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
       {/* Header */}
-      <div className="bg-white border-b sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 py-4">
+      <header className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => navigate('/')}
-                className="p-2 hover:bg-gray-100 rounded-lg transition"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <h1 className="text-xl font-bold">프로필</h1>
+            <div className="flex items-center space-x-2">
+              <span className="text-2xl">👤</span>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white">프로필</h1>
             </div>
-            {!isEditing && (
-              <Button onClick={handleEditClick} className="flex items-center gap-2">
-                <Edit className="w-4 h-4" />
-                수정
-              </Button>
-            )}
+            <div className="flex items-center gap-2">
+              <AdminModeToggle />
+              <ThemeToggle />
+              {!isEditing && (
+                <Button onClick={handleEditClick} className="flex items-center gap-2">
+                  <Edit className="w-4 h-4" />
+                  수정
+                </Button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      </header>
 
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
         {/* Profile Card */}
@@ -218,14 +274,14 @@ export default function ProfilePage() {
                   <p className="text-gray-600">{user.phone}</p>
 
                   <div className="flex flex-wrap gap-2 mt-4">
-                    <span className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium">
+                    <span className="px-3 py-1 bg-gray-800 text-white dark:bg-gray-200 dark:text-black rounded-full text-sm font-medium">
                       {getPositionLabel(user.position)}
                     </span>
-                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                    <span className="px-3 py-1 bg-black text-white dark:bg-white dark:text-black rounded-full text-sm font-medium">
                       {getLevelLabel(user.level)} (Lv.{user.level})
                     </span>
                     {user.role && user.role !== 'USER' && (
-                      <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+                      <span className="px-3 py-1 bg-gray-900 text-white dark:bg-gray-100 dark:text-black rounded-full text-sm font-medium">
                         {user.role === 'ADMIN' ? '관리자' : '슈퍼 관리자'}
                       </span>
                     )}
@@ -239,28 +295,103 @@ export default function ProfilePage() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card className="p-4 text-center">
-            <Calendar className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+            <Calendar className="w-8 h-8 text-black dark:text-white mx-auto mb-2" />
             <p className="text-2xl font-bold text-gray-900">{stats.totalMatches}</p>
             <p className="text-sm text-gray-600">총 매치</p>
           </Card>
 
           <Card className="p-4 text-center">
-            <Users className="w-8 h-8 text-green-600 mx-auto mb-2" />
+            <Users className="w-8 h-8 text-black dark:text-white mx-auto mb-2" />
             <p className="text-2xl font-bold text-gray-900">{stats.upcomingMatches}</p>
             <p className="text-sm text-gray-600">예정된 매치</p>
           </Card>
 
           <Card className="p-4 text-center">
-            <Trophy className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+            <Trophy className="w-8 h-8 text-black dark:text-white mx-auto mb-2" />
             <p className="text-2xl font-bold text-gray-900">{stats.completedMatches}</p>
             <p className="text-sm text-gray-600">완료된 매치</p>
           </Card>
 
           <Card className="p-4 text-center">
-            <Target className="w-8 h-8 text-purple-600 mx-auto mb-2" />
+            <Target className="w-8 h-8 text-black dark:text-white mx-auto mb-2" />
             <p className="text-2xl font-bold text-gray-900">{stats.createdMatches}</p>
             <p className="text-sm text-gray-600">생성한 매치</p>
           </Card>
+        </div>
+
+        {/* 내 팀 목록 */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">내 팀</h2>
+            <Button
+              size="sm"
+              onClick={() => navigate('/teams')}
+            >
+              팀 찾기
+            </Button>
+          </div>
+
+          {teamsLoading ? (
+            <Card className="p-8 text-center">
+              <p className="text-gray-600 dark:text-gray-400">로딩 중...</p>
+            </Card>
+          ) : myTeams.length === 0 ? (
+            <Card className="p-8 text-center">
+              <Users className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                아직 가입한 팀이 없습니다
+              </p>
+              <Button onClick={() => navigate('/teams')}>
+                팀 찾아보기
+              </Button>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {myTeams.map((team) => (
+                <Card
+                  key={team.id}
+                  className="p-4 hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => navigate(`/team/${team.id}`)}
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="font-bold text-gray-900 dark:text-white text-lg">
+                        {team.name}
+                      </h3>
+                      {team.captainId === userId && (
+                        <span className="inline-block px-2 py-0.5 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-full text-xs font-medium mt-1">
+                          주장
+                        </span>
+                      )}
+                    </div>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      team.status === 'RECRUITING' 
+                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
+                        : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
+                    }`}>
+                      {team.status === 'RECRUITING' ? '모집 중' : team.status === 'ACTIVE' ? '활동 중' : '비활성'}
+                    </span>
+                  </div>
+                  
+                  {team.description && (
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                      {team.description}
+                    </p>
+                  )}
+
+                  <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                    <div className="flex items-center gap-1">
+                      <Users className="w-4 h-4" />
+                      <span>{team.memberIds.length}/{team.maxMembers}명</span>
+                    </div>
+                    <div>
+                      레벨 {team.level}
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Upcoming Matches */}
@@ -351,6 +482,40 @@ export default function ProfilePage() {
           </div>
         </Card>
       </div>
+
+      {/* 하단 네비게이션 */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 md:hidden">
+        <div className="flex items-center justify-around py-3">
+          <button
+            onClick={() => navigate('/teams')}
+            className="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400"
+          >
+            <Users className="w-6 h-6" />
+            <span className="text-xs">팀</span>
+          </button>
+          <button
+            onClick={() => navigate('/sessions')}
+            className="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400"
+          >
+            <span className="text-2xl">🏀</span>
+            <span className="text-xs">세션</span>
+          </button>
+          <button
+            onClick={() => navigate('/matches')}
+            className="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400"
+          >
+            <span className="text-2xl">⚡</span>
+            <span className="text-xs">픽업게임</span>
+          </button>
+          <button
+            onClick={() => navigate('/profile')}
+            className="flex flex-col items-center gap-1 text-black dark:text-white"
+          >
+            <Users className="w-6 h-6" />
+            <span className="text-xs">프로필</span>
+          </button>
+        </div>
+      </nav>
     </div>
   );
 }

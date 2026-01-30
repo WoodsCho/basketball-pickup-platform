@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Filter, MapPin, Plus, User } from 'lucide-react';
+import { Filter, MapPin, Plus, User, Users } from 'lucide-react';
 import { Button, Input, ThemeToggle } from '@/shared/components';
 import type { Court } from '@/shared/types';
 import { useMatches } from '../hooks/useMatches';
@@ -143,34 +143,34 @@ export default function MatchListPage() {
       </main>
 
       {/* Bottom Navigation (Mobile) */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t dark:border-gray-700 md:hidden">
-        <div className="flex justify-around py-2">
-          <button 
-            onClick={() => navigate('/')}
-            className="flex flex-col items-center p-2 text-primary-600"
+      <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 md:hidden">
+        <div className="flex items-center justify-around py-3">
+          <button
+            onClick={() => navigate('/teams')}
+            className="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400"
           >
-            <span className="text-2xl mb-1">🏠</span>
-            <span className="text-xs">홈</span>
+            <Users className="w-6 h-6" />
+            <span className="text-xs">팀</span>
           </button>
-          <button 
-            onClick={() => alert('지도 기능은 곧 출시됩니다!')}
-            className="flex flex-col items-center p-2 text-gray-600"
+          <button
+            onClick={() => navigate('/sessions')}
+            className="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400"
           >
-            <span className="text-2xl mb-1">🗺️</span>
-            <span className="text-xs">지도</span>
+            <span className="text-2xl">🏀</span>
+            <span className="text-xs">세션</span>
           </button>
-          <button 
-            onClick={() => alert('내 매치 기능은 곧 출시됩니다!')}
-            className="flex flex-col items-center p-2 text-gray-600"
+          <button
+            onClick={() => navigate('/matches')}
+            className="flex flex-col items-center gap-1 text-black dark:text-white"
           >
-            <span className="text-2xl mb-1">📋</span>
-            <span className="text-xs">내 매치</span>
+            <span className="text-2xl">⚡</span>
+            <span className="text-xs">픽업게임</span>
           </button>
-          <button 
+          <button
             onClick={() => navigate('/profile')}
-            className="flex flex-col items-center p-2 text-gray-600"
+            className="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400"
           >
-            <span className="text-2xl mb-1">👤</span>
+            <Users className="w-6 h-6" />
             <span className="text-xs">프로필</span>
           </button>
         </div>

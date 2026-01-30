@@ -2,8 +2,10 @@
  * Auth Service
  * 인증 관련 비즈니스 로직
  */
-import { apiClient } from '../../../core/api/client';
+import { dynamoDBClient } from '../../../core/api/dynamodb-client';
 import type { User } from '../types/auth.types';
+
+const USER_TABLE = 'BasketballUsers';
 
 export class AuthService {
   /**
@@ -11,8 +13,7 @@ export class AuthService {
    */
   async getUserProfile(userId: string): Promise<User | null> {
     try {
-      const { data } = await apiClient.models.User.get({ id: userId });
-      return data as User | null;
+      return await dynamoDBClient.getItem<User>(USER_TABLE, userId);
     } catch (error) {
       console.error('[AuthService] Error getting user profile:', error);
       return null;
@@ -24,13 +25,16 @@ export class AuthService {
    */
   async createUserProfile(userData: Omit<User, 'createdAt' | 'updatedAt'>): Promise<User | null> {
     try {
-      // role이 없으면 기본값 'USER' 설정
-      const dataWithRole: any = {
+      const now = new Date().toISOString();
+      const userWithTimestamps: User = {
         ...userData,
-        role: (userData as any).role || 'USER',
+        role: userData.role || 'USER',
+        createdAt: now,
+        updatedAt: now,
       };
-      const { data } = await apiClient.models.User.create(dataWithRole);
-      return data as User | null;
+      
+      await dynamoDBClient.putItem(USER_TABLE, userWithTimestamps);
+      return userWithTimestamps;
     } catch (error) {
       console.error('[AuthService] Error creating user profile:', error);
       throw error;
@@ -42,11 +46,10 @@ export class AuthService {
    */
   async updateUserProfile(userId: string, updates: Partial<User>): Promise<User | null> {
     try {
-      const { data } = await apiClient.models.User.update({
-        id: userId,
+      return await dynamoDBClient.updateItem<User>(USER_TABLE, userId, {
         ...updates,
+        updatedAt: new Date().toISOString(),
       });
-      return data as User | null;
     } catch (error) {
       console.error('[AuthService] Error updating user profile:', error);
       throw error;
